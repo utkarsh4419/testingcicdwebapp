@@ -9,14 +9,14 @@ def health():
  
 @app.route("/api/hello", methods=["GET"])
 def hello():
-    return jsonify({"message": "Hello from DEV-Azure Web App"})
+    return jsonify({"message": "Hello from Azure Web App"})
 
 @app.route("/api/env", methods=["GET"])
 def env():
     snow_get_url = os.getenv("snow_get")
     env= os.getenv("env")
 
-    return jsonify({"message": "Hello from DEV-Azure Web App", "snow get": snow_get_url,"env": env})
+    return jsonify({"message": "Hello from Azure Web App", "snow get": snow_get_url,"env": env})
 
 if __name__ == "__main__":
     app.run()
