@@ -1,5 +1,5 @@
 from .auth_service import generate_auth_header
 from .device_service import search_device_by_name, get_device_datasources
 from .interface_service import get_interfaces, fetch_interfaces_for_device
-from .neighbor_service import fetch_neighbors_for_device , remove_id
+from .neighbor_service import fetch_neighbors_for_device 
 from .sdt_service import create_sdt, create_alert_suppression

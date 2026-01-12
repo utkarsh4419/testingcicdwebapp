@@ -3,7 +3,6 @@ from flask import Flask, request, jsonify
 import logging
 import urllib3
 import json
-import re
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -24,8 +23,6 @@ from services.snow_attach_file import (get_snow_token,get_change_task_sys_id,rep
 
 # ==================== HEALTH CHECK ====================
 
-def remove_id(text):
-        return re.sub(r"\s*\[ID:[^\]]+\]", "", text)
 
 @app.route('/')
 def home():
@@ -178,8 +175,8 @@ def lm_get_neighbors():
         logger.info(f"Getting neighbors for device_id: {device_id}, interface: {interface_name}")
 
         # Call service function
-        name = remove_id(interface_name)
-        result = fetch_neighbors_for_device(device_id, name, proxy)
+        #name = remove_id(interface_name)
+        result = fetch_neighbors_for_device(device_id, interface_name, proxy)
 
         # Determine HTTP status code
         status_code = result.get("status", 500)
