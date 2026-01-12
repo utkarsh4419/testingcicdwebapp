@@ -4,15 +4,13 @@ Neighbor-related service functions for LogicMonitor API
 """
 
 import logging
-import re
+
 from config.settings import TARGET_DATASOURCES, CDP_DATASOURCES
 from .device_service import search_device_by_name, get_device_datasources
 from .interface_service import get_interfaces
 from utils.helpers import return_error, extract_auto_property, interface_matches
 
 logger = logging.getLogger(__name__)
-
-
 
 
 def get_neighbor_interface_id(neighbor_device_name, neighbor_interface_name, proxy=None):

@@ -2,8 +2,6 @@
 from flask import Flask, request, jsonify
 import logging
 import urllib3
-import json
-import re
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -20,12 +18,8 @@ from config.keyvault import get_config
 from services.interface_service import fetch_interfaces_for_device
 from services.neighbor_service import fetch_neighbors_for_device
 from services.sdt_service import create_alert_suppression, create_bulk_alert_suppression
-from services.snow_attach_file import (get_snow_token,get_change_task_sys_id,replace_attachment)
 
 # ==================== HEALTH CHECK ====================
-
-def remove_id(text):
-        return re.sub(r"\s*\[ID:[^\]]+\]", "", text)
 
 @app.route('/')
 def home():
@@ -40,6 +34,7 @@ def home():
             "/api/test-secrets"
         ]
     })
+
 
 # ==================== SECRET MANAGEMENT ====================
 
@@ -91,6 +86,8 @@ def test_secrets():
             "hint": "Ensure System-Assigned Managed Identity is enabled and has 'Get' and 'List' permissions on Key Vault secrets"
         }), 500
 
+
+
 # ==================== DEVICE INTERFACES ====================
 
 @app.route('/api/Lm_Device_Interfaces', methods=['GET', 'POST'])
@@ -135,6 +132,7 @@ def lm_device_interfaces():
             "message": str(e)
         }), 500
 
+
 # ==================== NEIGHBOR INFORMATION ====================
 
 @app.route('/api/Lm_Get_Neighbors', methods=['GET', 'POST'])
@@ -178,8 +176,7 @@ def lm_get_neighbors():
         logger.info(f"Getting neighbors for device_id: {device_id}, interface: {interface_name}")
 
         # Call service function
-        name = remove_id(interface_name)
-        result = fetch_neighbors_for_device(device_id, name, proxy)
+        result = fetch_neighbors_for_device(device_id, interface_name, proxy)
 
         # Determine HTTP status code
         status_code = result.get("status", 500)
@@ -410,38 +407,6 @@ def lm_bulk_alert_suppression():
             "details": "Unexpected error occurred"
         }), 500
 
-@app.route("/api/attach-to-change-task", methods=["POST"])
-def attach_to_change_task():
-    try:
-        payload = request.json
-        if not payload:
-            return jsonify({
-                "status": "failure",
-                "message": "Invalid or missing JSON body"
-            }), 400
-        change_task_number = payload.get("change_task_number")
-        frontend_json = payload.get("data")
-
-        if not change_task_number or not frontend_json:
-            return jsonify({"error": "Invalid input"}), 400
-
-        token = get_snow_token()
-        sys_id = get_change_task_sys_id(token, change_task_number)
-
-        response = replace_attachment(token, sys_id, frontend_json)
-
-        return jsonify({
-            "status": f"Request Submitted successfully , File attached to CTask number-{change_task_number}",
-            "change_task": change_task_number,
-            "attachment_replaced": True,
-            "response": response
-        })
-    except Exception as e:
-        logging.exception("Unhandled error")
-        return jsonify({
-            "status": "Failed: Attachement not uploaded",
-            "message": str(e)
-        }), 500
 
 # ==================== MAIN ====================
 

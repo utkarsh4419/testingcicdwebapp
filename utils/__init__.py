@@ -5,6 +5,5 @@ from .helpers import (
     interface_matches,
     get_proxies,
     convert_to_epoch_ms,
-    normalize_time_string,
-    remove_id
+    normalize_time_string
 )

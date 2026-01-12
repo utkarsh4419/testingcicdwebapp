@@ -9,9 +9,7 @@ KEY_VAULT_URL = "https://secretmanagement1.vault.azure.net/"
 # Secret names in Key Vault
 SECRET_NAMES = {
     'access_id': 'LM-access-id',
-    'access_key': 'LM-access-key',
-    'snow_id'  :'Snow-dev-id',
-    'snow_secret': 'snow-dev-secret'
+    'access_key': 'LM-access-key'
 }
 
 # LogicMonitor API Base URL
